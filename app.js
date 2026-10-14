@@ -9,7 +9,8 @@ const PALETTES = [
 const HIDE_MS = 3000;
 const $ = (id) => document.getElementById(id);
 
-const cfg = { radius: 39, width: 3, speed: 2, cw: 1, pi: 0 };
+const DEFAULTS = { radius: 39, width: 3, speed: 2, cw: 1, pi: 0 };
+const cfg = { ...DEFAULTS };
 try {
   const saved = JSON.parse(localStorage.getItem('neonLiveCfg2') || 'null');
   if (saved) Object.assign(cfg, saved);
@@ -31,24 +32,26 @@ function stopsStr(stops) {
 }
 
 // ===== 전체화면 =====
-// 홈 화면 앱(manifest display: fullscreen)으로 실행하면 처음부터 전체화면.
-// 브라우저에서는 사용자 터치가 있어야 전체화면 진입이 허용됨.
-const appFull = () => matchMedia('(display-mode: fullscreen)').matches;
-const isFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement) || appFull();
+// 브라우저·설치 앱 모두 사용자 터치가 있어야 전체화면 API 진입이 허용됨.
+// 설치 앱(manifest display: fullscreen)이라도 단말·브라우저에 따라 상태바가 남는 경우가 있어,
+// display-mode가 아니라 '창이 실제로 디스플레이 전체를 덮는지'로 판단한다.
+const apiFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+const coversScreen = () => innerHeight > 0 && Math.abs(screen.width - innerWidth) <= 2 && Math.abs(screen.height - innerHeight) <= 2;
+const isFull = () => apiFull() || coversScreen();
 
 function enterFull() {
-  if (isFull()) return;
+  if (apiFull()) return;
   const el = document.documentElement;
   const req = el.requestFullscreen || el.webkitRequestFullscreen;
   if (req) { try { const p = req.call(el, { navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
 }
 
-// 사용자가 '축소됨' 버튼으로 직접 나간 경우에는 탭해도 다시 전체화면으로 들어가지 않음
+// 사용자가 '전체화면 해제' 버튼으로 직접 나간 경우에는 탭해도 다시 전체화면으로 들어가지 않음
 let userExited = false;
 const canFull = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
 
 function toggleFull() {
-  if (document.fullscreenElement || document.webkitFullscreenElement) {
+  if (apiFull()) {
     userExited = true;
     const ex = document.exitFullscreen || document.webkitExitFullscreen;
     if (ex) { try { ex.call(document); } catch (e) {} }
@@ -60,10 +63,18 @@ function toggleFull() {
 
 function updateFsUI() {
   fsState = isFull() ? '전체화면' : '축소됨';
-  $('nlv-full').textContent = fsState;
-  $('nlv-full').hidden = appFull();
+  // 전체화면 API로 들어간 상태만 해제 가능 (manifest 전체화면은 앱 스스로 해제할 수 없음)
+  $('nlv-full').textContent = apiFull() ? '전체화면 해제' : '전체화면';
+  $('nlv-full').hidden = !canFull || (!apiFull() && coversScreen());
   $('nlv-start').hidden = isFull() || userExited || !canFull;
   applyStyles();
+}
+
+// ===== 초기화 =====
+function resetCfg() {
+  Object.assign(cfg, DEFAULTS);
+  save();
+  syncControls();
 }
 
 // ===== 화면 꺼짐 방지 =====
@@ -109,6 +120,7 @@ function wire() {
     showUI();
   });
   $('nlv-full').addEventListener('click', toggleFull);
+  $('nlv-reset').addEventListener('click', resetCfg);
 
   $('nlv-radius').addEventListener('input', (e) => { cfg.radius = +e.target.value; applyStyles(); save(); });
   $('nlv-width').addEventListener('input', (e) => { cfg.width = +e.target.value; applyStyles(); save(); });
@@ -130,7 +142,7 @@ function wire() {
 
   document.addEventListener('fullscreenchange', updateFsUI);
   document.addEventListener('webkitfullscreenchange', updateFsUI);
-  matchMedia('(display-mode: fullscreen)').addEventListener('change', updateFsUI);
+  window.addEventListener('resize', updateFsUI);
   document.addEventListener('visibilitychange', keepAwake);
 }
 
