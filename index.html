@@ -26,6 +26,11 @@
     <div id="nlv-screen"></div>
   </div>
 
+  <!-- 브라우저에서 열었을 때: 첫 탭으로 전체화면 진입 안내 -->
+  <div id="nlv-start" hidden>
+    <div class="nlv-start-msg">화면을 탭하면 전체화면으로 시작합니다</div>
+  </div>
+
   <!-- 하단 설정값 + 톱니 -->
   <div id="nlv-ui">
     <div id="nlv-readout-row">
@@ -59,7 +64,7 @@
       <div id="nlv-palettes"></div>
 
       <div class="nlv-foot">
-        <span class="ver">v1<span id="offlineTag" hidden> · 오프라인</span></span>
+        <span class="ver">v2<span id="offlineTag" hidden> · 오프라인</span></span>
         <button id="installBtn" class="nlv-pill" type="button" hidden>📲 앱 설치</button>
       </div>
     </div>

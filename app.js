@@ -43,11 +43,17 @@ function enterFull() {
   if (req) { try { const p = req.call(el, { navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
 }
 
+// 사용자가 '축소됨' 버튼으로 직접 나간 경우에는 탭해도 다시 전체화면으로 들어가지 않음
+let userExited = false;
+const canFull = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+
 function toggleFull() {
   if (document.fullscreenElement || document.webkitFullscreenElement) {
+    userExited = true;
     const ex = document.exitFullscreen || document.webkitExitFullscreen;
     if (ex) { try { ex.call(document); } catch (e) {} }
   } else {
+    userExited = false;
     enterFull();
   }
 }
@@ -56,6 +62,7 @@ function updateFsUI() {
   fsState = isFull() ? '전체화면' : '축소됨';
   $('nlv-full').textContent = fsState;
   $('nlv-full').hidden = appFull();
+  $('nlv-start').hidden = isFull() || userExited || !canFull;
   applyStyles();
 }
 
@@ -113,7 +120,8 @@ function wire() {
 
   // 화면 탭: 숨겨진 UI를 다시 보이게 하고, 패널 바깥을 탭하면 패널을 닫음
   document.addEventListener('pointerdown', (e) => {
-    enterFull();
+    if (!userExited) enterFull();
+    $('nlv-start').hidden = true;
     keepAwake();
     const inUI = e.target.closest('#nlv-panel, #nlv-gear');
     if (!inUI && panelOpen()) $('nlv-panel').hidden = true;

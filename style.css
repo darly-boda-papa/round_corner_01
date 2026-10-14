@@ -10,6 +10,10 @@ body { touch-action: manipulation; -webkit-user-select: none; user-select: none;
 #nlv-hl { position: absolute; inset: 0; mix-blend-mode: screen; filter: blur(1px); }
 #nlv-screen { position: absolute; inset: 3px; background: #000; }
 
+/* 전체화면 시작 안내 (화면 전체가 탭 영역) */
+#nlv-start { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.nlv-start-msg { padding: 14px 20px; border-radius: 999px; background: rgba(255,255,255,0.14); color: #fff; font: 700 14px/1 -apple-system, 'Noto Sans KR', sans-serif; backdrop-filter: blur(6px); }
+
 /* 하단 UI: 3초 동안 조작 없으면 숨김 */
 #nlv-ui { transition: opacity 0.4s; }
 #nlv-ui.nlv-off { opacity: 0; pointer-events: none; }
