@@ -52,5 +52,6 @@ input[type=range].nlv-r::-moz-range-thumb { width: 22px; height: 22px; border: 0
 .nlv-pal.on { outline-color: #fff; }
 
 .nlv-wide { display: block; width: 100%; margin-top: 16px; border: 0; border-radius: 12px; padding: 10px 0; background: rgba(255,255,255,0.14); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; }
+.nlv-diag { margin-top: 14px; font: 11px/1.5 ui-monospace, monospace; opacity: 0.55; word-break: break-all; }
 .nlv-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; min-height: 30px; }
 .ver { font-size: 12px; opacity: 0.5; }

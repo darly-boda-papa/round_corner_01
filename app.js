@@ -68,6 +68,14 @@ function updateFsUI() {
   $('nlv-full').hidden = !canFull || (!apiFull() && coversScreen());
   $('nlv-start').hidden = isFull() || userExited || !canFull;
   applyStyles();
+  showDiag();
+}
+
+// 진단 정보: 창 크기와 디스플레이 크기를 비교해 상태바·컷아웃 영역이 빠졌는지 확인
+function showDiag() {
+  const mode = ['fullscreen', 'standalone', 'minimal-ui', 'browser'].find((m) => matchMedia('(display-mode: ' + m + ')').matches) || '?';
+  $('nlv-diag').textContent = '창 ' + innerWidth + '×' + innerHeight + ' / 화면 ' + screen.width + '×' + screen.height
+    + ' · ' + mode + ' · API ' + (apiFull() ? 'on' : 'off');
 }
 
 // ===== 초기화 =====
