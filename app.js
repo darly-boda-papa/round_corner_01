@@ -63,9 +63,9 @@ function toggleFull() {
 
 function updateFsUI() {
   fsState = isFull() ? '전체화면' : '축소됨';
-  // 전체화면 API로 들어간 상태만 해제 가능 (manifest 전체화면은 앱 스스로 해제할 수 없음)
+  // 버튼은 항상 표시 (설치 앱이 처음부터 화면을 덮고 있어도 숨기지 않음)
   $('nlv-full').textContent = apiFull() ? '전체화면 해제' : '전체화면';
-  $('nlv-full').hidden = !canFull || (!apiFull() && coversScreen());
+  $('nlv-full').hidden = !canFull;
   $('nlv-start').hidden = isFull() || userExited || !canFull;
   // 전체화면 상태인데 창이 디스플레이보다 작으면 단말이 카메라 영역 등을 잘라낸 것
   const fullMode = apiFull() || matchMedia('(display-mode: fullscreen)').matches;
@@ -220,10 +220,12 @@ if ('serviceWorker' in navigator) {
 }
 
 let installEvent = null;
+// 설치된 앱으로 실행 중이면 설치 버튼을 띄우지 않음
+const inApp = () => !matchMedia('(display-mode: browser)').matches;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   installEvent = e;
-  $('installBtn').hidden = false;
+  $('installBtn').hidden = inApp();
 });
 $('installBtn').addEventListener('click', async () => {
   if (!installEvent) return;
