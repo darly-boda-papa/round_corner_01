@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <!-- viewport-fit=cover: 카메라 컷아웃·상태바·내비게이션바 영역까지 그림 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Neon Edge Live</title>
+  <meta name="theme-color" content="#000000" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="nlv-wrap">
+  <!-- 번짐(bloom) -->
+  <div id="nlv-glow"></div>
+  <!-- 색 링 -->
+  <div id="nlv-ring">
+    <!-- 회전 하이라이트 -->
+    <div id="nlv-hl"></div>
+    <!-- 가운데 검은 화면: 테두리만 남김 -->
+    <div id="nlv-screen"></div>
+  </div>
+
+  <!-- 하단 설정값 + 톱니 -->
+  <div id="nlv-ui">
+    <div id="nlv-readout-row">
+      <span id="nlv-readout"></span>
+      <button id="nlv-gear" type="button" aria-label="설정">⚙</button>
+    </div>
+
+    <!-- 설정 패널 -->
+    <div id="nlv-panel" hidden>
+      <div class="nlv-head">
+        <div class="nlv-title">엣지 네온 설정</div>
+        <button id="nlv-full" class="nlv-pill" type="button">전체화면</button>
+      </div>
+
+      <label class="nlv-lab">Round Corner <span id="nlv-radius-v">39</span> dp</label>
+      <input id="nlv-radius" class="nlv-r" type="range" min="0" max="90" step="1" />
+
+      <label class="nlv-lab">선 굵기 <span id="nlv-width-v">3</span> px</label>
+      <input id="nlv-width" class="nlv-r" type="range" min="1" max="24" step="1" />
+
+      <label class="nlv-lab">속도 <span id="nlv-speed-v">2.0</span> s / 바퀴</label>
+      <input id="nlv-speed" class="nlv-r" type="range" min="0.5" max="8" step="0.5" />
+
+      <div class="nlv-lab">회전 방향</div>
+      <div class="nlv-dirs">
+        <button class="nlv-dir" data-cw="0" type="button">반시계 ↺</button>
+        <button class="nlv-dir" data-cw="1" type="button">시계 ↻</button>
+      </div>
+
+      <div class="nlv-lab">색상 팔레트</div>
+      <div id="nlv-palettes"></div>
+
+      <div class="nlv-foot">
+        <span class="ver">v1<span id="offlineTag" hidden> · 오프라인</span></span>
+        <button id="installBtn" class="nlv-pill" type="button" hidden>📲 앱 설치</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
