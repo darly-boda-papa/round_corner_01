@@ -67,6 +67,9 @@ function updateFsUI() {
   $('nlv-full').textContent = apiFull() ? '전체화면 해제' : '전체화면';
   $('nlv-full').hidden = !canFull || (!apiFull() && coversScreen());
   $('nlv-start').hidden = isFull() || userExited || !canFull;
+  // 전체화면 상태인데 창이 디스플레이보다 작으면 단말이 카메라 영역 등을 잘라낸 것
+  const fullMode = apiFull() || matchMedia('(display-mode: fullscreen)').matches;
+  $('nlv-cut').hidden = !(fullMode && innerHeight > 0 && !coversScreen());
   applyStyles();
   showDiag();
 }
@@ -129,6 +132,8 @@ function wire() {
   });
   $('nlv-full').addEventListener('click', toggleFull);
   $('nlv-reset').addEventListener('click', resetCfg);
+  // 버전 표시를 탭하면 진단 줄 표시/숨김
+  $('nlv-ver').addEventListener('click', () => { $('nlv-diag').hidden = !$('nlv-diag').hidden; });
 
   $('nlv-radius').addEventListener('input', (e) => { cfg.radius = +e.target.value; applyStyles(); save(); });
   $('nlv-width').addEventListener('input', (e) => { cfg.width = +e.target.value; applyStyles(); save(); });
