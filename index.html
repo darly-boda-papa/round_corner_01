@@ -32,13 +32,15 @@
   </div>
 
   <!-- 하단 설정값 + 톱니 -->
+  <!-- 전체화면인데 단말이 창 일부(카메라 영역 등)를 잘라낼 때 안내 (탭하면 닫힘) -->
+  <div id="nlv-cut" hidden>
+    화면 위쪽 일부가 비어 있습니다.<br />
+    설정 → 디스플레이 → <b>카메라 컷아웃</b>에서<br />
+    브라우저를 <b>카메라 영역 보이기</b>로 바꿔 주세요.
+    <div class="nlv-cut-close">탭하면 닫힙니다</div>
+  </div>
+
   <div id="nlv-ui">
-    <!-- 전체화면인데 단말이 창 일부(카메라 영역 등)를 잘라낼 때 안내 -->
-    <div id="nlv-cut" hidden>
-      화면 위쪽 일부가 비어 있습니다.<br />
-      설정 → 디스플레이 → <b>카메라 컷아웃</b>에서<br />
-      브라우저를 <b>카메라 영역 보이기</b>로 바꿔 주세요.
-    </div>
     <div id="nlv-readout-row">
       <span id="nlv-readout"></span>
       <button id="nlv-gear" type="button" aria-label="설정">⚙</button>
@@ -74,7 +76,7 @@
       <div id="nlv-diag" class="nlv-diag" hidden></div>
 
       <div class="nlv-foot">
-        <span class="ver" id="nlv-ver">v6<span id="offlineTag" hidden> · 오프라인</span></span>
+        <span class="ver" id="nlv-ver">v7<span id="offlineTag" hidden> · 오프라인</span></span>
         <button id="installBtn" class="nlv-pill" type="button" hidden>📲 앱 설치</button>
       </div>
     </div>

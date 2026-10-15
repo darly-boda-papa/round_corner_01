@@ -58,7 +58,8 @@ input[type=range].nlv-r::-moz-range-thumb { width: 22px; height: 22px; border: 0
   color: #ffe2a8; font: 600 13px/1.6 -apple-system, 'Noto Sans KR', sans-serif; text-align: center;
 }
 #nlv-cut b { color: #fff; }
-#nlv-ui:has(#nlv-panel:not([hidden])) #nlv-cut { display: none; }
+#nlv-wrap:has(#nlv-panel:not([hidden])) #nlv-cut { display: none; }
+.nlv-cut-close { margin-top: 8px; font-size: 11px; opacity: 0.6; }
 .ver { cursor: pointer; }
 .nlv-diag { margin-top: 14px; font: 11px/1.5 ui-monospace, monospace; opacity: 0.55; word-break: break-all; }
 .nlv-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; min-height: 30px; }

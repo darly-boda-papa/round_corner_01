@@ -66,13 +66,24 @@ function updateFsUI() {
   // 버튼은 항상 표시 (설치 앱이 처음부터 화면을 덮고 있어도 숨기지 않음)
   $('nlv-full').textContent = apiFull() ? '전체화면 해제' : '전체화면';
   $('nlv-full').hidden = !canFull;
-  $('nlv-start').hidden = isFull() || userExited || !canFull;
-  // 전체화면 상태인데 창이 디스플레이보다 작으면 단말이 카메라 영역 등을 잘라낸 것
-  const fullMode = apiFull() || matchMedia('(display-mode: fullscreen)').matches;
-  $('nlv-cut').hidden = !(fullMode && innerHeight > 0 && !coversScreen());
   applyStyles();
   showDiag();
+  clearTimeout(settleTimer);
+  if (!needStart()) $('nlv-start').hidden = true;
+  if (!needCut()) $('nlv-cut').hidden = true;
+  // 앱 실행 직후·전체화면 전환 중에는 창 크기가 잠깐 작게 잡히므로, 상태가 유지될 때만 안내를 띄움
+  settleTimer = setTimeout(() => {
+    if (needStart()) $('nlv-start').hidden = false;
+    if (needCut()) $('nlv-cut').hidden = cutDismissed;
+  }, SETTLE_MS);
 }
+
+const SETTLE_MS = 2000;
+let settleTimer = 0;
+let cutDismissed = false;
+const needStart = () => !isFull() && !userExited && canFull;
+// 전체화면 상태인데 창이 디스플레이보다 작으면 단말이 카메라 영역 등을 잘라낸 것
+const needCut = () => (apiFull() || matchMedia('(display-mode: fullscreen)').matches) && innerHeight > 0 && !coversScreen();
 
 // 진단 정보: 창 크기와 디스플레이 크기를 비교해 상태바·컷아웃 영역이 빠졌는지 확인
 function showDiag() {
@@ -147,6 +158,7 @@ function wire() {
   document.addEventListener('pointerdown', (e) => {
     if (!userExited) enterFull();
     $('nlv-start').hidden = true;
+    if (!$('nlv-cut').hidden) { $('nlv-cut').hidden = true; cutDismissed = true; }
     keepAwake();
     const inUI = e.target.closest('#nlv-panel, #nlv-gear');
     if (!inUI && panelOpen()) $('nlv-panel').hidden = true;
